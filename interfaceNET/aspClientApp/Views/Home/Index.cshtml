@@ -1,0 +1,9 @@
+﻿@model List<StateDTO>
+
+@foreach(var state in Model)
+{
+    <div>
+        <h4>@state.StateName</h4>
+        <p>@state.Price</p>
+    </div>
+}

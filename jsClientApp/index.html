@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="getStates()">Get States</button>
+    <button onclick="getStatesById()">Get States with ID</button>
+    <button onclick="login()">Login</button>
+
+    <div id ="divStates">
+        
+    </div>
+
+    <script>
+
+        const login = async () => {
+            const response = await fetch("http://localhost:5160/api/users/login", {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({ email: 'aakahraman16@gmail.com', password : "51520202" })
+            });
+            const result = await response.json();
+            localStorage.setItem("token", JSON.stringify(result.token));
+        }
+
+        const getStates = async () => {
+            const response = await fetch("http://localhost:5160/api/states");
+            const states = await response.json();
+            console.log(states);
+            displayStates(states);
+        }
+
+        const getStatesById = async () => {
+            const token = JSON.parse(localStorage.getItem("token"));
+            const response = await fetch("http://localhost:5160/api/states/3", {
+                headers:  { Authorization: `Bearer ${token}`}
+            });
+            const state = await response.json();
+            displayState(state);
+        }
+
+        const displayState = (state) => {
+            const parent = document.getElementById("divStates");
+
+            
+            parent.innerHTML = `
+                <div>
+                    <h5>${state.stateName}stateName</h5>
+                    <p>${state.price}</p>    
+                </div>
+            `;
+             
+        }
+
+        const displayStates = (states) => {
+            const parent = document.getElementById("divStates");
+
+            states.forEach(stt => {
+                parent.innerHTML += `
+                    <div>
+                        <h5>${stt.stateName}stateName</h5>
+                        <p>${stt.price}</p>    
+                    </div>`;
+            });
+        }
+
+
+
+
+
+    </script>
+
+</body>
+</html>
